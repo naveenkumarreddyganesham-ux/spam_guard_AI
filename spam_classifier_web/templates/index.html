@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SpamGuard AI | Message Intelligence</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#scanner" data-view="scanner">
+      <span class="brand-icon">✦</span>
+      <span><b>SpamGuard AI</b><small>MESSAGE INTELLIGENCE</small></span>
+    </a>
+    <span class="nav-title">WORKSPACE</span>
+    <nav class="main-nav" aria-label="Dashboard sections">
+      <a class="nav active" href="#scanner" data-view="scanner"><span>⌕</span>Message Scanner</a>
+      <a class="nav" href="#comparison" data-view="comparison"><span>⇄</span>Model Comparison</a>
+      <a class="nav" href="#dataset" data-view="dataset"><span>▤</span>Dataset Explorer</a>
+      <a class="nav" href="#performance" data-view="performance"><span>▥</span>Model Performance</a>
+      <a class="nav" href="#batch" data-view="batch"><span>⇧</span>Batch Analysis</a>
+      <a class="nav" href="#history" data-view="history"><span>◷</span>Scan History</a>
+    </nav>
+    <div class="sidebar-note">
+      <span class="note-icon">⌁</span><b>AI-powered protection</b>
+      <p>Two machine learning models examine message patterns to identify likely spam.</p>
+    </div>
+    <div class="side-bottom">LOCAL PROJECT DEMO<br><span>Naive Bayes · SVM</span></div>
+  </aside>
+  <main class="main">
+    <header class="page-header">
+      <div><span class="eyebrow">MESSAGE INTELLIGENCE</span><h1 id="page-title">Message Scanner</h1>
+      <p class="sub" id="page-subtitle">Analyze messages with trained machine learning classifiers.</p></div>
+      <div class="status"><span class="pulse"></span>Models ready</div>
+    </header>
+
+    <section class="view-section active" id="scanner">
+      <div class="stats-row">
+        <div class="stat"><span class="stat-label">MESSAGES CHECKED</span><strong id="total-count">0</strong><small>Saved local scans</small></div>
+        <div class="stat"><span class="stat-label">SPAM FLAGGED</span><strong id="spam-count">0</strong><small>Classified as spam</small></div>
+        <div class="stat"><span class="stat-label">HAM MESSAGES</span><strong id="safe-count">0</strong><small>Classified as ham</small></div>
+      </div>
+      <div class="scan-grid">
+        <section class="panel input-panel">
+          <div class="panel-heading"><div><h2>Message analysis</h2><p>Paste a message to run both trained models.</p></div><span class="tag">● LIVE ANALYSIS</span></div>
+          <label for="message">MESSAGE CONTENT</label>
+          <textarea id="message" placeholder="Paste the email, SMS, or chat message you want to check..." maxlength="5000"></textarea>
+          <div class="char-count"><span>Text input</span><span id="char-count">0 / 5000</span></div>
+          <div class="model-row"><div><label for="model">RESULT MODEL</label><p>Choose the primary result to display</p></div>
+            <select id="model"><option>Naive Bayes</option><option>SVM</option></select></div>
+          <button id="analyze" class="primary-btn"><span>✧</span> Analyze message <span class="arrow">→</span></button>
+          <div class="samples"><span>Try sample:</span><button class="sample" data-sample="Hey! Are we still meeting at the library at 4 PM? I have the notes ready.">Ham example</button><button class="sample spam" data-sample="Congratulations! You won a cash prize. Claim now by clicking this link and verify your details.">Spam example</button></div>
+        </section>
+        <section class="panel result-panel">
+          <div class="panel-heading"><div><h2>Analysis result</h2><p>Prediction, confidence, and message indicators</p></div><span class="tag">● RESULTS</span></div>
+          <div id="empty-result" class="empty-result"><div class="empty-icon">⌕</div><b>Waiting for message</b><p>Your classification result and message statistics will appear here.</p></div>
+          <div id="result-content" class="result-content hidden">
+            <div class="result-banner" id="result-banner"><div class="result-symbol" id="result-symbol">✓</div><div><span id="result-overline">CLASSIFICATION</span><h3 id="result-label">HAM MESSAGE</h3><p id="result-desc">Prediction is based on learned message patterns.</p></div></div>
+            <div class="confidence-box"><div class="conf-head"><span>MODEL CONFIDENCE</span><b id="confidence">0%</b></div><div class="bar"><div id="conf-bar"></div></div><div class="risk-line"><span>Risk level</span><b id="risk">Low</b></div></div>
+            <div class="probabilities"><div class="prob"><span>Spam probability</span><b id="spam-prob">0%</b></div><div class="prob"><span>Ham probability</span><b id="ham-prob">0%</b></div></div>
+            <div class="why-box"><b>Why this classification?</b><p id="explanation"></p></div>
+            <div class="explain"><b>Detected suspicious patterns</b><div id="patterns" class="pattern-list"></div></div>
+            <div class="stats-grid" id="message-stats"></div>
+            <div class="advice" id="advice"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="view-section" id="comparison">
+      <div class="panel">
+        <div class="panel-heading"><div><h2>Model comparison</h2><p>Compare both trained classifiers against the same message.</p></div><span class="tag">LIVE PREDICTIONS</span></div>
+        <form id="comparison-form" class="comparison-form">
+          <label for="comparison-message">MESSAGE CONTENT</label>
+          <textarea id="comparison-message" maxlength="5000" placeholder="Type or paste a message to compare Naive Bayes and SVM..."></textarea>
+          <div class="comparison-input-footer">
+            <div class="samples"><span>Try sample:</span><button class="sample compare-sample" type="button" data-compare-sample="Congratulations! You won a cash prize. Claim now by clicking this link and verify your details.">Spam example</button><button class="sample compare-sample" type="button" data-compare-sample="Hey! Are we still meeting at the library at 4 PM? I have the notes ready.">Ham example</button></div>
+            <span class="char-count" id="comparison-char-count">0 / 5000</span>
+          </div>
+          <button id="compare-models" class="primary-btn" type="submit">Compare Models <span class="arrow">→</span></button>
+        </form>
+        <div id="comparison-error" class="error-message hidden" role="alert"></div>
+        <div id="comparison-empty" class="empty-state">Enter a message above and choose <b>Compare Models</b> to see both predictions.</div>
+        <div id="comparison-content" class="hidden">
+          <div id="comparison-summary" class="notice" role="status"></div>
+          <div id="comparison-cards" class="comparison-grid"></div>
+          <div class="chart-panel"><h3>Confidence and class probabilities</h3><canvas id="comparison-chart" aria-label="Confidence, Spam probability, and Ham probability by model"></canvas></div>
+          <div class="comparison-analysis">
+            <article class="analysis-card"><h3>Message analysis</h3><blockquote id="comparison-quoted-message"></blockquote><div class="stats-grid" id="comparison-stats"></div></article>
+            <article class="analysis-card"><h3>Suspicious keyword patterns</h3><div id="comparison-patterns" class="pattern-list"></div><p class="comparison-explanation" id="comparison-explanation"></p></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view-section" id="dataset">
+      <div class="stats-row dataset-stats">
+        <button id="dataset-card-total" class="stat dataset-stat-card" data-dataset-filter="all" type="button" aria-label="Show all dataset messages" aria-pressed="false"><span class="stat-label">TOTAL RECORDS</span><strong id="dataset-total">—</strong><small>Labeled messages in the dataset</small></button>
+        <button id="dataset-card-spam" class="stat dataset-stat-card" data-dataset-filter="SPAM" type="button" aria-label="Filter to Spam messages" aria-pressed="false"><span class="stat-label">SPAM</span><strong id="dataset-spam">—</strong><small>Training dataset examples</small></button>
+        <button id="dataset-card-ham" class="stat dataset-stat-card" data-dataset-filter="HAM" type="button" aria-label="Filter to Ham messages" aria-pressed="false"><span class="stat-label">HAM</span><strong id="dataset-ham">—</strong><small>Training dataset examples</small></button>
+      </div>
+      <div class="two-col">
+        <div class="panel chart-panel"><div class="panel-heading"><div><h2>Class distribution</h2><p>Actual labels in the supplied dataset</p></div></div><canvas id="dataset-chart" aria-label="Spam and ham dataset distribution"></canvas><div id="dataset-legend" class="chart-legend"></div></div>
+        <div class="panel"><div class="panel-heading"><div><h2>Evaluation split</h2><p>Deterministic stratified 80/20 split</p></div></div><div class="split-stats"><div><span>Training records</span><b id="training-size">—</b></div><div><span>Testing records</span><b id="testing-size">—</b></div></div><p class="muted small">Performance metrics are calculated on the testing portion; production predictions use models trained on the full dataset.</p></div>
+      </div>
+      <div class="panel table-panel dataset-table-panel">
+        <div class="panel-heading"><div><h2>Dataset records</h2><p>Browse all labeled messages from data/messages.csv</p></div></div>
+        <div class="dataset-table-tools">
+          <div class="dataset-controls">
+            <input id="dataset-search" type="search" placeholder="Search messages">
+            <select id="dataset-label-filter" aria-label="Filter dataset by label">
+              <option value="all">All labels</option><option value="SPAM">Spam</option><option value="HAM">Ham</option>
+            </select>
+            <button id="dataset-random" class="secondary-btn" type="button">Random sample</button>
+            <button id="dataset-show-all" class="secondary-btn" type="button">Show All</button>
+            <button id="dataset-clear-filters" class="secondary-btn" type="button">Clear filters</button>
+          </div>
+          <div class="dataset-table-status"><span id="dataset-results-count">Loading dataset records…</span><div id="dataset-pagination" class="dataset-pagination"><button id="dataset-previous" class="secondary-btn" type="button">Previous</button><span id="dataset-page-info"></span><button id="dataset-next" class="secondary-btn" type="button">Next</button></div></div>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Message</th><th>Label</th></tr></thead><tbody id="dataset-rows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="view-section" id="performance">
+      <div class="panel">
+        <div class="panel-heading"><div><h2>Model performance</h2><p>Metrics calculated from held-out testing data. Spam is the positive class.</p></div><label class="inline-select">MODEL <select id="performance-model"><option>Naive Bayes</option><option>SVM</option></select></label></div>
+        <div class="metric-grid">
+          <div class="metric-card"><span>ACCURACY</span><b id="metric-accuracy">—</b></div><div class="metric-card"><span>PRECISION</span><b id="metric-precision">—</b></div>
+          <div class="metric-card"><span>RECALL</span><b id="metric-recall">—</b></div><div class="metric-card"><span>F1-SCORE</span><b id="metric-f1">—</b></div>
+        </div>
+        <div class="confusion-wrap"><div><h3>Confusion matrix</h3><p class="muted small">Rows are actual labels; columns are predicted labels.</p><div id="confusion-matrix" class="matrix"></div></div>
+          <div class="confusion-counts"><div><span>True Positive</span><b id="true-positive">—</b></div><div><span>True Negative</span><b id="true-negative">—</b></div><div><span>False Positive</span><b id="false-positive">—</b></div><div><span>False Negative</span><b id="false-negative">—</b></div></div></div>
+        <p class="muted small">Test records: <b id="performance-test-size">—</b>. Results reflect this project's small demonstration dataset, not a production benchmark.</p>
+      </div>
+    </section>
+
+    <section class="view-section" id="batch">
+      <div class="panel">
+        <div class="panel-heading"><div><h2>Batch analysis</h2><p>Upload a CSV with a <code>message</code> or <code>text</code> column.</p></div><span class="tag">UP TO 5,000 ROWS</span></div>
+        <form id="batch-form" class="upload-form"><label class="file-picker" for="batch-file"><span>⇧</span><b>Choose a CSV file</b><small id="file-name">UTF-8 CSV · max 10 MB</small></label><input id="batch-file" name="file" type="file" accept=".csv,text/csv" required><button class="primary-btn" id="batch-submit" type="submit">Classify messages <span class="arrow">→</span></button></form>
+        <div id="batch-error" class="error-message hidden"></div>
+        <div id="batch-results" class="hidden"><div class="batch-summary" id="batch-summary"></div><div class="table-panel"><div class="panel-heading"><div><h2>Classified messages</h2><p>Predicted by the trained Naive Bayes model</p></div><button id="download-results" class="secondary-btn" type="button">Download results CSV</button></div><div class="table-wrap"><table><thead><tr><th>CSV row</th><th>Message</th><th>Prediction</th><th>Confidence</th><th>Spam probability</th></tr></thead><tbody id="batch-rows"></tbody></table></div></div></div>
+      </div>
+    </section>
+
+    <section class="view-section" id="history">
+      <div class="panel history-panel">
+        <div class="panel-heading"><div><h2>Scan history</h2><p>Saved locally with scan timestamps</p></div><button class="secondary-btn danger-text" id="clear-history" type="button">Clear history</button></div>
+        <div class="history-filters"><input id="history-search" type="search" placeholder="Search message text"><select id="history-filter" aria-label="Filter scan history"><option value="">All classifications</option><option value="spam">Spam</option><option value="ham">Ham</option></select></div>
+        <div id="history-list" class="history-list"><div class="empty-state">No scan history yet. Try analyzing a message.</div></div>
+      </div>
+    </section>
+    <footer>PROJECT DEMO · Artificial Intelligence-Based Automated Spam Message Recognition and Classification · Predictions are informational.</footer>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
